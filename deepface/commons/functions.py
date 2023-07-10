@@ -97,9 +97,9 @@ def load_image(img):
 
     # The image is a url
     if img.startswith("http"):
-        return np.array(Image.open(requests.get(img, stream=True, timeout=60).raw).convert("RGB"))[
-            :, :, ::-1
-        ]
+        return np.array(
+            Image.open(requests.get(img, stream=True, timeout=60).raw).convert("RGB")
+        )[:, :, ::-1]
 
     # The image is a path
     if os.path.isfile(img) is not True:
@@ -125,6 +125,7 @@ def extract_faces(
     grayscale=False,
     enforce_detection=True,
     align=True,
+    output_rgb=False,
 ):
     """Extract faces from an image.
 
@@ -156,7 +157,9 @@ def extract_faces(
         face_objs = [(img, img_region, 0)]
     else:
         face_detector = FaceDetector.build_model(detector_backend)
-        face_objs = FaceDetector.detect_faces(face_detector, detector_backend, img, align)
+        face_objs = FaceDetector.detect_faces(
+            face_detector, detector_backend, img, align
+        )
 
     # in case of no face found
     if len(face_objs) == 0 and enforce_detection is True:
@@ -211,6 +214,11 @@ def extract_faces(
             # double check: if target image is not still the same size with target.
             if current_img.shape[0:2] != target_size:
                 current_img = cv2.resize(current_img, target_size)
+
+            if output_rgb is True:
+                current_img = cv2.cvtColor(
+                    current_img, cv2.COLOR_BGR2RGB
+                )
 
             # normalizing the image pixels
             # what this line doing? must?
