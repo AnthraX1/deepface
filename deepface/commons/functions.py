@@ -115,6 +115,7 @@ def load_image(img):
     # This causes troubles when reading files with non english names
     # return cv2.imread(img)
 
+
 # --------------------------------------------------
 
 
@@ -160,7 +161,6 @@ def extract_faces(
         face_objs = FaceDetector.detect_faces(
             face_detector, detector_backend, img, align
         )
-
     # in case of no face found
     if len(face_objs) == 0 and enforce_detection is True:
         raise ValueError(
@@ -216,9 +216,7 @@ def extract_faces(
                 current_img = cv2.resize(current_img, target_size)
 
             if output_rgb is True:
-                current_img = cv2.cvtColor(
-                    current_img, cv2.COLOR_BGR2RGB
-                )
+                current_img = cv2.cvtColor(current_img, cv2.COLOR_BGR2RGB)
 
             # normalizing the image pixels
             # what this line doing? must?
