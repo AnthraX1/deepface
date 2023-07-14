@@ -127,6 +127,7 @@ def extract_faces(
     enforce_detection=True,
     align=True,
     output_rgb=False,
+    facenet_standardize=False
 ):
     """Extract faces from an image.
 
@@ -222,7 +223,11 @@ def extract_faces(
             # what this line doing? must?
             img_pixels = image.img_to_array(current_img)
             img_pixels = np.expand_dims(img_pixels, axis=0)
-            img_pixels /= 255  # normalize input in [0, 1]
+            if facenet_standardize is True:
+                img_pixels /= 127.5
+                img_pixels -= 1
+            else:
+                img_pixels /= 255  # normalize input in [0, 1]
 
             # int cast is for the exception - object of type 'float32' is not JSON serializable
             region_obj = {
